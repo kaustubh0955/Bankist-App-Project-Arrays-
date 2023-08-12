@@ -3,7 +3,6 @@
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // BANKIST APP
-
 // Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
@@ -80,9 +79,54 @@ const displayMovements = function (movements) {
   });
 };
 displayMovements(account1.movements);
-console.log(containerMovements.innerHTML);
+
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+calcDisplayBalance(account1.movements);
+
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}`;
+
+  const outcomes = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc - mov, 0);
+  labelSumOut.textContent = `${outcomes}`;
+
+  const interests = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter((int, i, arr) => {
+      console.log(arr);
+      return int >= 1;
+    })
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumInterest.textContent = `${interests}`;
+};
+calcDisplaySummary(account1.movements);
+//Computing Username
+const createUsernames = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
+};
+createUsernames(accounts);
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+//console.log(username);
+//console.log(containerMovements.innerHTML);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
+
+/*
 // LECTURES
 
 const currencies = new Map([
@@ -91,7 +135,7 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+//const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 //CODING CHALLENGE
@@ -110,3 +154,101 @@ const checkDogs = function (dogsJulia, dogsKate) {
   console.log(dogsJuliaCorrected);
 };
 checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
+
+
+//MAP METHOD
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const eurToUSD = 1.1;
+//const movementsUSD = movements.map(function (mov) {
+// return mov * eurToUSD;
+//});
+
+const movementsUSD = movements.map(mov => mov * eurToUSD);
+console.log(movements);
+console.log(movementsUSD);
+const movementsUSDfor = [];
+for (const mov of movements) movementsUSDfor.push(mov * eurToUSD);
+console.log(movementsUSDfor);
+
+const movementsDescriptions = movements.map(
+  (mov, i) =>
+    `Movement ${i + 1}: You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(
+      mov
+    )}`
+);
+console.log(movementsDescriptions);
+
+//Filter method
+//Use callback function
+
+const deposits = movements.filter(function (mov) {
+  return mov > 0;
+});
+console.log(movements);
+console.log(deposits);
+
+const depositsFor = [];
+for (const mov of movements) if (mov > 0) depositsFor.push(mov);
+console.log(depositsFor);
+
+const withdrawalFor = [];
+for (const mov1 of movements) if (mov1 < 0) withdrawalFor.push(mov1);
+console.log(withdrawalFor);
+
+//Reduce Method
+console.log(movements);
+const balance = movements.reduce(function (acc, cur, i, arr) {
+  console.log(`Iteration ${i}:${acc}`);
+  return acc + cur;
+}, 100);
+console.log(balance);
+
+//Maximum Value
+const max = movements.reduce((acc, mov) => {
+  if (acc > mov) return acc;
+  else return mov;
+}, movements[0]);
+console.log(max);
+
+//CODING CHALLENGE 2
+
+const calcAverageHumanAge = function (ages) {
+  const humanAges = ages.map(age => (age <= 2 ? 2 * age : 16 + age * 4));
+  const adults = humanAges.filter(age => age >= 18);
+  console.log(humanAges);
+  console.log(adults);
+
+  const average = adults.reduce((acc, age) => acc + age, 0) / adults.length;
+  return average;
+};
+const avg1 = calcAverageHumanAge([5, 2, 4, 1, 15, 8, 13]);
+const avg2 = calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
+console.log(avg1, avg2);
+
+//Chaining Methid
+
+const eurToUSD = 1.1;
+//PIPELINE
+const totalDepositsUSD = movements
+  //.filter(mov => mov > 0)
+  //.map(mov => mov * eurToUSD)
+  .filter(mov => mov < 0)
+  .map((mov, i, arr) => {
+    console.log(arr);
+    return mov * eurToUSD;
+  })
+  .reduce((acc, mov) => acc + mov, 0);
+
+console.log(totalDepositsUSD);
+
+*/
+
+//FIND METHOD
+//Find method accepts callback function.It loops over the array
+const firstWithdrawl = movements.find(mov => mov < 0);
+console.log(movements);
+console.log(firstWithdrawl);
+
+console.log(accounts);
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
